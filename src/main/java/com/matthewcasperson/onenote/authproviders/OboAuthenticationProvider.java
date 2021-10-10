@@ -31,7 +31,12 @@ public class OboAuthenticationProvider extends BaseAuthenticationProvider {
     }
 
     @Override
-    public CompletableFuture<String> getAuthorizationTokenAsync(URL requestUrl) {
+    public CompletableFuture<String> getAuthorizationTokenAsync(final URL requestUrl) {
+        // don't attempt to get a token if the request URL doesn't need it
+        if (!shouldAuthenticateRequestWithUrl(requestUrl)) {
+            return CompletableFuture.completedFuture(null);
+        }
+       
         final String uri = UriComponentsBuilder
                 .fromHttpUrl("https://login.microsoftonline.com/" + tenant + "/oauth2/v2.0/token")
                 .queryParam("grant_type", "urn:ietf:params:oauth:grant-type:jwt-bearer")
