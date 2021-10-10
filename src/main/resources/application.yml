@@ -1,0 +1,11 @@
+azure:
+  activedirectory:
+    tenant-id: 2ed832a8-cd8c-4f7d-89b3-935447e260c8
+    client-id: abfb7030-ff37-48cd-8bd7-1bf5ec0777db
+    client-secret: ${CLIENT_SECRET}
+
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG

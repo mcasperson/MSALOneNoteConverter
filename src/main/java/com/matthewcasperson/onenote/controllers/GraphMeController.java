@@ -11,26 +11,26 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
+// import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 
 @Controller
 public class GraphMeController {
     @GetMapping("/me")
     public ModelAndView getGraphMe(AADAuthenticationProperties azureAd) {
 
-        JwtAuthenticationToken oauthToken = (JwtAuthenticationToken) SecurityContextHolder
-            .getContext()
-            .getAuthentication();
+        // JwtAuthenticationToken oauthToken = (JwtAuthenticationToken) SecurityContextHolder
+        //     .getContext()
+        //     .getAuthentication();
 
-        final GraphServiceClient client = buildGraphClient(
-                oauthToken.getToken().getTokenValue(), 
-                azureAd.getTenantId(),
-                azureAd.getClientId(), 
-                azureAd.getClientSecret(),
-                "https://graph.microsoft.com/user.read+offline_access");
-        final User me = client.me().buildRequest().get();
+        // final GraphServiceClient client = buildGraphClient(
+        //         oauthToken.getToken().getTokenValue(), 
+        //         azureAd.getTenantId(),
+        //         azureAd.getClientId(), 
+        //         azureAd.getClientSecret(),
+        //         "https://graph.microsoft.com/user.read+offline_access");
+        // final User me = client.me().buildRequest().get();
         final ModelAndView mav = new ModelAndView("me");
-        mav.addObject("me", me);
+        // mav.addObject("me", me);
         return mav;
     }
 
