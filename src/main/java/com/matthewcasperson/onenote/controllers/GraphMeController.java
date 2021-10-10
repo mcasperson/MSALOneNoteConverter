@@ -18,8 +18,9 @@ public class GraphMeController {
     @GetMapping("/me")
     public ModelAndView getGraphMe(AADAuthenticationProperties azureAd) {
 
-        JwtAuthenticationToken oauthToken = (JwtAuthenticationToken) SecurityContextHolder.getContext()
-                .getAuthentication();
+        JwtAuthenticationToken oauthToken = (JwtAuthenticationToken) SecurityContextHolder
+            .getContext()
+            .getAuthentication();
 
         final GraphServiceClient client = buildGraphClient(
                 oauthToken.getToken().getTokenValue(), 
