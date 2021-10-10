@@ -8,8 +8,6 @@ import com.microsoft.graph.authentication.BaseAuthenticationProvider;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import reactor.core.publisher.Mono;
-
 /**
  * https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-on-behalf-of-flow#first-case-access-token-request-with-a-shared-secret
  */
@@ -45,6 +43,8 @@ public class OboAuthenticationProvider extends BaseAuthenticationProvider {
                 .queryParam("requested_token_use", "on_behalf_of").build().toUriString();
 
         return WebClient.create(uri).get().retrieve().bodyToMono(String.class).toFuture();
+
+        AADAuthenticationProperties a = null;
     }
 
 }
