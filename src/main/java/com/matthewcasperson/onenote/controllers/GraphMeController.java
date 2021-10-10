@@ -39,8 +39,12 @@ public class GraphMeController {
         final String clientId,
         final String clientSecret, 
         final String scopes) {
-        final OboAuthenticationProvider oboAuthenticationProvider = new OboAuthenticationProvider(accessToken, tenantId,
-                clientId, clientSecret, scopes);
+        final OboAuthenticationProvider oboAuthenticationProvider = new OboAuthenticationProvider(
+            accessToken,
+            tenantId,
+            clientId, 
+            clientSecret, 
+            scopes);
 
         return GraphServiceClient.builder().authenticationProvider(oboAuthenticationProvider).buildClient();
     }
