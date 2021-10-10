@@ -30,6 +30,12 @@
 			<groupId>com.azure.spring</groupId>
 			<artifactId>azure-spring-boot-starter-active-directory</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.microsoft.graph</groupId>
+			<artifactId>microsoft-graph</artifactId>
+			<version>5.4.0</version>
+		</dependency>
+		
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
