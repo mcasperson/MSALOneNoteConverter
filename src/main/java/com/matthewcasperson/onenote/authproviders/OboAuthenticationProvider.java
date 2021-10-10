@@ -38,13 +38,19 @@ public class OboAuthenticationProvider extends BaseAuthenticationProvider {
         final String uri = UriComponentsBuilder
                 .fromHttpUrl("https://login.microsoftonline.com/" + tenant + "/oauth2/v2.0/token")
                 .queryParam("grant_type", "urn:ietf:params:oauth:grant-type:jwt-bearer")
-                .queryParam("client_id", clientId).queryParam("client_secret", clientSecret)
-                .queryParam("assertion", accessToken).queryParam("scope", scope)
-                .queryParam("requested_token_use", "on_behalf_of").build().toUriString();
+                .queryParam("client_id", clientId)
+                .queryParam("client_secret", clientSecret)
+                .queryParam("assertion", accessToken)
+                .queryParam("scope", scope)
+                .queryParam("requested_token_use", "on_behalf_of")
+                .build()
+                .toUriString();
 
-        return WebClient.create(uri).get().retrieve().bodyToMono(String.class).toFuture();
-
-        AADAuthenticationProperties a = null;
+        return WebClient.create(uri)
+            .get()
+            .retrieve()
+            .bodyToMono(String.class)
+            .toFuture();
     }
 
 }
