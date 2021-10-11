@@ -5,7 +5,11 @@ import com.matthewcasperson.onenote.authproviders.OboAuthenticationProvider;
 import com.microsoft.graph.requests.GraphServiceClient;
 import com.microsoft.graph.models.User;
 
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
+import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
+import org.springframework.security.oauth2.client.web.OAuth2AuthorizedClientRepository;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,40 +25,35 @@ public class GraphMeController {
   @Autowired
   AADAuthenticationProperties azureAd;
 
-    @GetMapping("/me")
-    public ModelAndView getGraphMe() {
+  @GetMapping("/me")
+  public ModelAndView getGraphMe(@RegisteredOAuth2AuthorizedClient("api") OAuth2AuthorizedClient client) {
 
-         final OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) SecurityContextHolder
-             .getContext()
-             .getAuthentication();
+    final GraphServiceClient graphClient = buildGraphClient(
+        client.getAccessToken().getTokenValue(),
+        azureAd.getTenantId(),
+        azureAd.getClientId(),
+        azureAd.getClientSecret(),
+        "https://graph.microsoft.com/user.read");
+    final User me = graphClient.me().buildRequest().get();
+    final ModelAndView mav = new ModelAndView("me");
+    return mav;
+  }
 
-        final String token = ((OidcUser) oauthToken.getPrincipal()).getIdToken().getTokenValue();
+  private GraphServiceClient buildGraphClient(
+      final String accessToken,
+      final String tenantId,
+      final String clientId,
+      final String clientSecret,
+      final String scopes) {
+    final OboAuthenticationProvider oboAuthenticationProvider = new OboAuthenticationProvider(
+        accessToken,
+        tenantId,
+        clientId,
+        clientSecret,
+        scopes);
 
-         final GraphServiceClient client = buildGraphClient(
-             token,
-             azureAd.getTenantId(),
-             azureAd.getClientId(),
-             azureAd.getClientSecret(),
-             "https://graph.microsoft.com/user.read+offline_access");
-         final User me = client.me().buildRequest().get();
-        final ModelAndView mav = new ModelAndView("me");
-        // mav.addObject("me", me);
-        return mav;
-    }
-
-    private GraphServiceClient buildGraphClient(
-        final String accessToken, 
-        final String tenantId, 
-        final String clientId,
-        final String clientSecret, 
-        final String scopes) {
-        final OboAuthenticationProvider oboAuthenticationProvider = new OboAuthenticationProvider(
-            accessToken,
-            tenantId,
-            clientId, 
-            clientSecret, 
-            scopes);
-
-        return GraphServiceClient.builder().authenticationProvider(oboAuthenticationProvider).buildClient();
-    }
+    return GraphServiceClient.builder()
+        .authenticationProvider(oboAuthenticationProvider)
+        .buildClient();
+  }
 }

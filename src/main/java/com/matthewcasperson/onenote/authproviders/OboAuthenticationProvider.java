@@ -1,10 +1,22 @@
 package com.matthewcasperson.onenote.authproviders;
 
+import com.google.common.collect.ImmutableMap;
+import com.microsoft.aad.msal4j.ClientCredentialFactory;
+import com.microsoft.aad.msal4j.ConfidentialClientApplication;
+import com.microsoft.aad.msal4j.IAuthenticationResult;
+import com.microsoft.aad.msal4j.IClientCredential;
+import com.microsoft.aad.msal4j.OnBehalfOfParameters;
+import com.microsoft.aad.msal4j.UserAssertion;
 import java.net.URL;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import com.microsoft.graph.authentication.BaseAuthenticationProvider;
 
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -34,23 +46,43 @@ public class OboAuthenticationProvider extends BaseAuthenticationProvider {
         if (!shouldAuthenticateRequestWithUrl(requestUrl)) {
             return CompletableFuture.completedFuture(null);
         }
-       
-        final String uri = UriComponentsBuilder
-                .fromHttpUrl("https://login.microsoftonline.com/" + tenant + "/oauth2/v2.0/token")
-                .queryParam("grant_type", "urn:ietf:params:oauth:grant-type:jwt-bearer")
-                .queryParam("client_id", clientId)
-                .queryParam("client_secret", clientSecret)
-                .queryParam("assertion", accessToken)
-                .queryParam("scope", scope)
-                .queryParam("requested_token_use", "on_behalf_of")
-                .build()
-                .toUriString();
 
-        return WebClient.create(uri)
-            .get()
-            .retrieve()
-            .bodyToMono(String.class)
-            .toFuture();
+        final String oboToken = getAccessToken(accessToken, clientId, clientSecret);
+        return CompletableFuture.completedFuture(oboToken);
+
+//        final MultiValueMap formData = CollectionUtils.toMultiValueMap(
+//            ImmutableMap.<String, List<String>>builder()
+//                .put("grant_type", List.of("urn:ietf:params:oauth:grant-type:jwt-bearer"))
+//                .put("client_id", List.of(clientId))
+//                .put("client_secret", List.of(clientSecret))
+//                .put("assertion", List.of(accessToken))
+//                .put("scope", List.of(scope))
+//                .put("requested_token_use", List.of("on_behalf_of"))
+//                .build());
+//
+//        return WebClient
+//            .create("https://login.microsoftonline.com/" + tenant + "/oauth2/v2.0/token")
+//            .post()
+//            .bodyValue(BodyInserters.fromFormData(formData))
+//            .retrieve()
+//            .bodyToMono(String.class)
+//            .toFuture();
+    }
+
+    private String getAccessToken(final String authToken, final String clientId, final String clientSecret) {
+        try {
+            final IClientCredential credential = ClientCredentialFactory.createFromSecret(clientSecret);
+            final ConfidentialClientApplication cca = ConfidentialClientApplication.builder(clientId, credential)
+                .authority("https://login.microsoftonline.com/matthewcasperson.onmicrosoft.com").build();
+
+            final OnBehalfOfParameters parameters = OnBehalfOfParameters
+                .builder(Collections.singleton("https://graph.microsoft.com/.default"),
+                    new UserAssertion(authToken)).build();
+            return cca.acquireToken(parameters).join().accessToken();
+        }
+        catch (final Exception ex) {
+            return "";
+        }
     }
 
 }
