@@ -17,7 +17,7 @@ public class GraphMeController {
   WebClient webClient;
 
   @GetMapping("/me")
-  public String getGraphMe(@RegisteredOAuth2AuthorizedClient("api") OAuth2AuthorizedClient client) {
+  public String getGraphMe(@RegisteredOAuth2AuthorizedClient("api") final OAuth2AuthorizedClient client) {
 
     final User user = webClient
         .get()

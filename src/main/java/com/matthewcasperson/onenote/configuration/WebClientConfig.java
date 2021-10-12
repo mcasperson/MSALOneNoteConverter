@@ -16,15 +16,15 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class WebClientConfig {
   @Bean
   public OAuth2AuthorizedClientManager authorizedClientManager(
-      ClientRegistrationRepository clientRegistrationRepository,
-      OAuth2AuthorizedClientRepository authorizedClientRepository) {
+      final ClientRegistrationRepository clientRegistrationRepository,
+      final OAuth2AuthorizedClientRepository authorizedClientRepository) {
 
-    OAuth2AuthorizedClientProvider authorizedClientProvider =
+    final OAuth2AuthorizedClientProvider authorizedClientProvider =
         OAuth2AuthorizedClientProviderBuilder.builder()
             .clientCredentials()
             .build();
 
-    DefaultOAuth2AuthorizedClientManager authorizedClientManager =
+    final DefaultOAuth2AuthorizedClientManager authorizedClientManager =
         new DefaultOAuth2AuthorizedClientManager(
             clientRegistrationRepository, authorizedClientRepository);
     authorizedClientManager.setAuthorizedClientProvider(authorizedClientProvider);
@@ -33,8 +33,8 @@ public class WebClientConfig {
   }
 
   @Bean
-  public static WebClient webClient(OAuth2AuthorizedClientManager oAuth2AuthorizedClientManager) {
-    ServletOAuth2AuthorizedClientExchangeFilterFunction function =
+  public static WebClient webClient(final OAuth2AuthorizedClientManager oAuth2AuthorizedClientManager) {
+    final ServletOAuth2AuthorizedClientExchangeFilterFunction function =
         new ServletOAuth2AuthorizedClientExchangeFilterFunction(oAuth2AuthorizedClientManager);
     return WebClient.builder()
         .apply(function.oauth2Configuration())
