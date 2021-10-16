@@ -82,7 +82,6 @@ public class OneNoteController {
     headers.setContentType(MediaType.TEXT_MARKDOWN);
     final String filename = "page.md";
     headers.setContentDispositionFormData(filename, filename);
-    headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
     return new ResponseEntity<>(markdown.getBytes(), headers, HttpStatus.OK);
   }
 }
