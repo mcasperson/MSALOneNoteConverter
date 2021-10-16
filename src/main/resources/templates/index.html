@@ -1,0 +1,12 @@
+<html>
+<body>
+<h1>Notes</h1>
+<select style="display: block" size="5" id="note">
+  <option th:each="note: ${notes}" th:value="${note}" th:text="${note}">
+  </option>
+</select>
+<button onclick="location.href='/notes/' + note.options[note.selectedIndex].value + '/markdown';">
+  Convert Note
+</button>
+</body>
+</html>

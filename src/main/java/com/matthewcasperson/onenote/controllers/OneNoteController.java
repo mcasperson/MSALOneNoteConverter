@@ -2,6 +2,7 @@ package com.matthewcasperson.onenote.controllers;
 
 import static org.springframework.security.oauth2.client.web.reactive.function.client.ServerOAuth2AuthorizedClientExchangeFilterFunction.oauth2AuthorizedClient;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
@@ -32,6 +33,22 @@ public class OneNoteController {
     System.out.println(user.givenName + " " + user.surname);
 
     return "markdown";
+  }
+
+  @GetMapping("/")
+  public ModelAndView getIndex(
+      @RegisteredOAuth2AuthorizedClient("api") final OAuth2AuthorizedClient client) {
+    final List notes = webClient
+        .get()
+        .uri("http://localhost:8081/notes/")
+        .attributes(oauth2AuthorizedClient(client))
+        .retrieve()
+        .bodyToMono(List.class)
+        .block();
+
+    final ModelAndView mav = new ModelAndView("index");
+    mav.addObject("notes", notes);
+    return mav;
   }
 
   @GetMapping("/notes/{name}/markdown")
