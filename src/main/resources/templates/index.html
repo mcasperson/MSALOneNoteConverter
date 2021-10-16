@@ -3,7 +3,7 @@
   <script>
     function handleClick() {
       if (note.selectedIndex !== -1) {
-        location.href='/notes/' + note.options[note.selectedIndex].value + '/markdown';
+        location.href='/notes/' + note.options[note.selectedIndex].value;
       } else {
         alert("Please select a notebook");
       }
@@ -16,8 +16,8 @@
   <option th:each="note: ${notes}" th:value="${note}" th:text="${note}">
   </option>
 </select>
-<button onclick="handleClick();">
-  Convert Note
+<button style="margin-top: 10px" onclick="handleClick();">
+  View Note
 </button>
 </body>
 </html>
