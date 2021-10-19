@@ -29,7 +29,7 @@ html, body {
   padding-right: 10px;
 }
 
-.tab a {
+.tab a, .title a {
   color: white;
 }
 
