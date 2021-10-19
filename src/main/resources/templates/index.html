@@ -1,5 +1,6 @@
 <html>
 <head>
+  <link rel="stylesheet" href="/style.css">
   <script>
     function handleClick() {
       if (note.selectedIndex !== -1) {
@@ -11,13 +12,23 @@
   </script>
 </head>
 <body>
-<h1>Notes</h1>
-<select style="display: block" size="5" id="note">
-  <option th:each="note: ${notes}" th:value="${note}" th:text="${note}">
-  </option>
-</select>
-<button style="margin-top: 10px" onclick="handleClick();">
-  View Note
-</button>
+<div class="container">
+  <div class="header">
+    <div class="title">ONENOTE CONVERTER</div>
+  </div>
+  <div class="main">
+    <form class="formContainer">
+      <div class="formRow">
+        <select style="display: block" size="5" id="note">
+          <option th:each="note: ${notes}" th:value="${note}" th:text="${note}">
+          </option>
+        </select>
+      </div>
+      <div class="formRow">
+        <input type="button" value="View Note"  onclick="handleClick();">
+      </div>
+    </form>
+  </div>
+</div>
 </body>
 </html>

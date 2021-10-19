@@ -1,0 +1,60 @@
+html, body {
+  font-family: sans-serif;
+  height:100%;
+  width:100%;
+  margin:0;
+  padding:0;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  height: 50px;
+  background-color: deepskyblue;
+  color: white;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.title {
+  padding-left: 10px;
+  flex-grow: 1;
+}
+
+.tab {
+  padding-right: 10px;
+}
+
+.tab a {
+  color: white;
+}
+
+.main {
+  flex-grow: 1;
+  margin: 10px;
+}
+
+.formContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.formRow {
+  display: flex;
+  flex-direction: row;
+  margin-top: 10px;
+  flex-grow: 1;
+  justify-content: center;
+}
+
+label {
+  width: 150px;
+}
+
+input, select {
+  min-width: 300px;
+}
