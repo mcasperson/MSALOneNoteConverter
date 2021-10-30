@@ -6,7 +6,7 @@ azure:
     authorization-clients:
       api:
         scopes:
-          - api://692c1e91-7e1c-40fa-ae8d-66a888f1a6c9/User.Read
+          - api://44301ed3-d324-4fab-b475-620e0e893390/Read.Notes
 
 logging:
   level:
